@@ -1,4 +1,8 @@
 using System;
+// Dictionary and HashSet are not safe for concurrent readers and writers. 
+// Dictionaries/Hashsets that are not written to after set-up are safe for concurrent readers.
+//  They are never safe for a write and any other operation (read or write).
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -9,7 +13,7 @@ namespace DNWS
   {
     protected String _url;
     protected String _filename;
-    protected static Dictionary<String, String> _propertyListDictionary = null;
+    protected static ConcurrentDictionary<String, String> _propertyListDictionary = null;
     protected static Dictionary<String, String> _requestListDictionary = null;
 
     protected String _body;
@@ -44,7 +48,7 @@ namespace DNWS
     }
     public HTTPRequest(String request)
     {
-      _propertyListDictionary = new Dictionary<String, String>();
+      _propertyListDictionary = new ConcurrentDictionary<String, String>();
       String[] lines = Regex.Split(request, "\\n");
 
       if(lines.Length == 0) {

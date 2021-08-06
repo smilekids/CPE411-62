@@ -1,4 +1,8 @@
 using System;
+// Dictionary and HashSet are not safe for concurrent readers and writers. 
+// Dictionaries/Hashsets that are not written to after set-up are safe for concurrent readers.
+//  They are never safe for a write and any other operation (read or write).
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,12 +10,12 @@ namespace DNWS
 {
   class StatPlugin : IPlugin
   {
-    protected static Dictionary<String, int> statDictionary = null;
+    protected static ConcurrentDictionary<String, int> statDictionary = null;
     public StatPlugin()
     {
       if (statDictionary == null)
       {
-        statDictionary = new Dictionary<String, int>();
+        statDictionary = new ConcurrentDictionary<String, int>();
 
       }
     }
